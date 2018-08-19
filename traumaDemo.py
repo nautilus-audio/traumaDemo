@@ -1,5 +1,8 @@
 
 #!/usr/bin/python
+'''
+Use Feature Extraction from pyAudioAnalyis to analyze voice samples with MFCC. Calculate to get fundamental frequency. Calculate formant from F0. Then calculate first formant using the average vocal human tract length, and subsequent formants.
+'''
 
 
 from pyAudioAnalysis import audioBasicIO
