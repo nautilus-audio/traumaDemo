@@ -8,26 +8,61 @@ Use Feature Extraction from pyAudioAnalyis to analyze voice samples with MFCC. C
 from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis import audioFeatureExtraction
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as style
 
 
 #Import & Analyze Audio Signal
-[Fs, x] = audioBasicIO.readAudioFile("OSIRIS_Motif.wav");
+nfft = 64
+X = 64
+nceps = 32
+
+[Fs, x] = audioBasicIO.readAudioFile("PTSD_female.wav");
+
 
 #Mono
-if (x.any()==1):
+if (x.any==1):
     nuX = audioBasicIO.stereo2mono(x);
     F = audioFeatureExtraction.stFeatureExtraction(nuX, Fs, 0.050*Fs, 0.025*Fs);
-
 #Stereo
 else:
     F = audioFeatureExtraction.stFeatureExtraction(x[:,0], Fs, 0.050*Fs, 0.025*Fs)
 
 
-plt.subplot(2,1,1); plt.plot(F[0,:]); plt.xlabel('Frame no'); plt.ylabel('ZCR');
-plt.subplot(2,1,2); plt.plot(F[1,:]); plt.xlabel('Frame no'); plt.ylabel('Energy');
-plt.subplot(2,1,9); plt.plot(F[9,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC'); plt.show()
+[fbank, freqs] = audioFeatureExtraction.mfccInitFilterBanks(Fs, nfft)
 
 
+ceps = audioFeatureExtraction.stMFCC(X, fbank, nceps);
+
+print ceps
+
+#chn = audiofile.channels
+
+'''
+#Mono
+if (x.any==1):
+    nuX = audioBasicIO.stereo2mono(x);
+    F = audioFeatureExtraction.stFeatureExtraction(nuX, Fs, 0.050*Fs, 0.025*Fs);
+#Stereo
+elif (x.any==2):
+    F = audioFeatureExtraction.stFeatureExtraction(x[:,0], Fs, 0.050*Fs, 0.025*Fs)
+
+#Else
+else:
+    print ('Please input a Stereo or Mono file')
+#return 1
+'''
+
+
+plt.title('MFCC Analysis')
+plt.subplot(1,1,1); plt.plot(F[9,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC');
+plt.subplot(1,1,1); plt.plot(F[10,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC 2');
+plt.subplot(1,1,1); plt.plot(F[11,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC 3');
+plt.subplot(1,1,1); plt.plot(F[12,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC 4');
+plt.subplot(1,1,1); plt.plot(F[13,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC 5');
+plt.subplot(1,1,1); plt.plot(F[14,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC 6');
+
+
+plt.show()
 
 
 
