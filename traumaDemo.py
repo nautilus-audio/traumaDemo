@@ -10,6 +10,8 @@ from pyAudioAnalysis import audioFeatureExtraction
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as style
 
+FILE = "PTSD_female2.wav"
+
 def findFormants():
 
     #Define Variables
@@ -18,7 +20,7 @@ def findFormants():
     nceps = 64
 
     #Import & Analyze Audio Signal
-    [Fs, x] = audioBasicIO.readAudioFile("PTSD_female2.wav");
+    [Fs, x] = audioBasicIO.readAudioFile(FILE);
 
     #[HR, f0] = audioFeatureExtraction.stHarmonic(x[:,0], Fs)
 
