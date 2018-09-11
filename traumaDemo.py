@@ -35,7 +35,7 @@ def findFormants(FILE, i, length):
         print frqs
         
         #Visualize Data
-        plt.title('MFCC Analysis')
+        plt.title('Formant Values')
         #plt.subplot(1,1,1); plt.plot(F[9,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC');
         #plt.subplot(1,1,1); plt.plot(ceps[:,0]); plt.xlabel('Frame no'); plt.ylabel('Freq (Hz)');
         plt.subplot(1,1,1); plt.plot(frqs); plt.xlabel('Frame no'); plt.ylabel('Freq (Hz)');
