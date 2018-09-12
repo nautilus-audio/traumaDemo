@@ -8,10 +8,12 @@ import matplotlib.pyplot as style
 
 #Define Global Variables
 FILE = ["PTSD_female.wav", "Anxiety_female.wav", "Depression_male.wav", "Depression_male2_JB.wav", "Depression_male3_JB.wav"]
+firstFormantValues = []
 length = len(FILE)-1
 i = 0
 
-def findFormants(FILE, i, length):
+
+def findFormants(FILE, i, length, firstFormantValues):
 
     #Define Variables
     nfft = 256
@@ -25,28 +27,39 @@ def findFormants(FILE, i, length):
         #Calculate Formant Frequencies
         frqs = audioFeatureExtraction.phormants(x[:,0], Fs);
         
-        #print frqs
-        
+        #Delete Empty Values, add Formant Values to new array, Print File Name and Formant Value
+        '''
+            if FILE[i] == "female"
+                plot color...
+            if FILE[i] == "male"
+            if FILE[i] == "PTSD"
+            if FILE[i] == "Depression"
+            if FILE[i] == "Anxiety"
+            if FILE[i] == "Control"
+        '''
         
         if frqs[0] == 0.0 and frqs[1] != 0.0:
-            print FILE[i], frqs[1]
+            del frqs[0]
+            firstFormantValues.append(frqs[0])
+            print FILE[i], frqs[0]
         elif frqs[0] == 0.0 and frqs[1] == 0.0:
-                print FILE[i], frqs[2]
+            del frqs[1]
+            firstFormantValues.append(frqs[1])
+            print FILE[i], frqs[1]
         else:
+            firstFormantValues.append(frqs[0])
             print FILE[i], frqs[0]
         
+        #firstFormantValues.sort();
         '''
             Next Steps:
-            - Add first formant values from frqs[] to new array
-            - Sort Array from lowest to highest values
-            - Plot Data to Graph
+            - Plot Data to Graph, Add Styling, Make Scatter Plot?
         '''
         
         #Visualize Data
         plt.title('Formant Values')
-        #plt.subplot(1,1,1); plt.plot(F[9,:]); plt.xlabel('Frame no'); plt.ylabel('MFCC');
-        #plt.subplot(1,1,1); plt.plot(ceps[:,0]); plt.xlabel('Frame no'); plt.ylabel('Freq (Hz)');
-        plt.subplot(1,1,1); plt.plot(frqs); plt.xlabel('Frame no'); plt.ylabel('Freq (Hz)');
+        #plt.subplot(1,1,1); plt.plot(frqs); plt.xlabel('Frame no'); plt.ylabel('Freq (Hz)');
+        plt.subplot(1,1,1); plt.plot(firstFormantValues); plt.xlabel('Sample no'); plt.ylabel('Freq (Hz)');
         
         i += 1
 
@@ -56,12 +69,13 @@ def findFormants(FILE, i, length):
     [fbank, freqs] = audioFeatureExtraction.mfccInitFilterBanks(Fs, nfft);
     ceps = audioFeatureExtraction.stMFCC(X, fbank, nceps);
 
-    return frqs, x
+    return frqs, x, firstFormantValues, FILE
 
 
 #Call Functions
-[frqs, x] = findFormants(FILE, i, length);
-#print frqs
+[frqs, x, firstFormantValues, FILE] = findFormants(FILE, i, length, firstFormantValues);
+#print firstFormantValues
+
 
 plt.show()
 
