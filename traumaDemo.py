@@ -1,5 +1,11 @@
 
 #!/usr/bin/python
+'''
+Anxiety = Red
+Depression = Blue
+PTSD = Green
+Control = Yellow
+'''
 
 from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis import audioFeatureExtraction
@@ -13,31 +19,28 @@ length = len(FILE)-1
 i = 0
 
 
+
 def findFormants(FILE, i, length, firstFormantValues):
 
     #Define Variables
     nfft = 256
     X = 32
     nceps = 64
+    
+    red = 'ro'
+    blue = 'bo'
+    green = 'go'
+    yellow = 'yo'
+    plotColor = ''
 
     while i <= length:
         #Import & Analyze Audio Signal
         [Fs, x] = audioBasicIO.readAudioFile(FILE[i]);
-    
+
         #Calculate Formant Frequencies
         frqs = audioFeatureExtraction.phormants(x[:,0], Fs);
-        
+
         #Delete Empty Values, add Formant Values to new array, Print File Name and Formant Value
-        '''
-            if FILE[i] == "female"
-                plot color...
-            if FILE[i] == "male"
-            if FILE[i] == "PTSD"
-            if FILE[i] == "Depression"
-            if FILE[i] == "Anxiety"
-            if FILE[i] == "Control"
-        '''
-        
         if frqs[0] == 0.0 and frqs[1] != 0.0:
             del frqs[0]
             firstFormantValues.append(frqs[0])
@@ -50,6 +53,17 @@ def findFormants(FILE, i, length, firstFormantValues):
             firstFormantValues.append(frqs[0])
             print FILE[i], frqs[0]
         
+        #Assign Plot Color to Sample Type
+        if  "PTSD" in FILE[i]:
+            plotColor = green
+                #print plotColor
+        elif "Depression" in FILE[i]:
+            plotColor = blue
+        elif "Anxiety" in FILE[i]:
+            plotColor = red
+        elif "Control" in FILE[i]:
+            plotColor = yellow
+        
         #firstFormantValues.sort();
         '''
             Next Steps:
@@ -59,7 +73,9 @@ def findFormants(FILE, i, length, firstFormantValues):
         #Visualize Data
         plt.title('Formant Values')
         #plt.subplot(1,1,1); plt.plot(frqs); plt.xlabel('Frame no'); plt.ylabel('Freq (Hz)');
-        plt.subplot(1,1,1); plt.plot(firstFormantValues); plt.xlabel('Sample no'); plt.ylabel('Freq (Hz)');
+        plt.plot(firstFormantValues, plotColor); plt.xlabel('Sample no'); plt.ylabel('Freq (Hz)');
+        print plotColor
+        plotColor = ''
         
         i += 1
 
@@ -76,7 +92,7 @@ def findFormants(FILE, i, length, firstFormantValues):
 [frqs, x, firstFormantValues, FILE] = findFormants(FILE, i, length, firstFormantValues);
 #print firstFormantValues
 
-
+plt.axis([0, length, 0, 1000])
 plt.show()
 
 
