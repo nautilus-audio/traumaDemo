@@ -27,7 +27,14 @@ def findFormants(FILE, i, length):
     
         #Calculate Formant Frequencies
         frqs = audioFeatureExtraction.phormants(x[:,0], Fs);
-        print frqs
+        
+        if frqs[0] == 0.0:
+            print frqs[1]
+            if frqs[0] == 0.0 and frqs[1] == 0.0:
+                print frqs[2]
+                print "trace"
+        else:
+            print frqs[0]
         
         #Visualize Data
         plt.title('Formant Values')
