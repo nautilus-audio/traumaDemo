@@ -18,9 +18,6 @@ def findFormants(FILE, i, length):
     X = 32
     nceps = 64
 
-    
-    
-    #for i in FILE:
     while i <= length:
         #Import & Analyze Audio Signal
         [Fs, x] = audioBasicIO.readAudioFile(FILE[i]);
@@ -28,13 +25,22 @@ def findFormants(FILE, i, length):
         #Calculate Formant Frequencies
         frqs = audioFeatureExtraction.phormants(x[:,0], Fs);
         
-        if frqs[0] == 0.0:
-            print frqs[1]
-            if frqs[0] == 0.0 and frqs[1] == 0.0:
-                print frqs[2]
-                print "trace"
+        #print frqs
+        
+        
+        if frqs[0] == 0.0 and frqs[1] != 0.0:
+            print FILE[i], frqs[1]
+        elif frqs[0] == 0.0 and frqs[1] == 0.0:
+                print FILE[i], frqs[2]
         else:
-            print frqs[0]
+            print FILE[i], frqs[0]
+        
+        '''
+            Next Steps:
+            - Add first formant values from frqs[] to new array
+            - Sort Array from lowest to highest values
+            - Plot Data to Graph
+        '''
         
         #Visualize Data
         plt.title('Formant Values')
