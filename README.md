@@ -4,6 +4,8 @@ Python script that calculates first (F1) and second (F2) formant values of an ar
 
 ![alt text](https://github.com/imABEING/traumaDemo/blob/master/F1_F2_Values.png "Plot")
 
+### Purpose:
+
 ### Steps:
 
 
