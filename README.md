@@ -7,3 +7,4 @@ Python script that calculates first (F1) and second (F2) formant values of an ar
 ### Steps:
 
 
+
