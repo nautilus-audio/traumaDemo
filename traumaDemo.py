@@ -29,7 +29,7 @@ def findFormants(FILE, i, length):
     green = 'go'
     yellow = 'yo'
     
-    #Arrays to store colors, F1 % F2 Values
+    #Arrays to store colors, F1 & F2 Values
     plotColor = []
     firstFormantValues = []
     secondFormantValues = []
@@ -47,13 +47,15 @@ def findFormants(FILE, i, length):
 
         #Delete Empty Values, add Data to new array
         if frqs[0] == 0.0 and frqs[1] != 0.0:
-            del frqs[0]
+            #del frqs[0]
+            frqs.remove(0.0)
             firstFormantValues.append(frqs[0])
             secondFormantValues.append(frqs[1])
             print FILE[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
             formants.write("{} \t\t\t {} \t\t\t {} \n".format(FILE[i].rstrip('.wav'), frqs[0], frqs[1]))
         elif frqs[0] == 0.0 and frqs[1] == 0.0:
-            del frqs[1]
+            #del frqs[1]
+            frqs.remove(0.0)
             firstFormantValues.append(frqs[1])
             secondFormantValues.append(frqs[2])
             print FILE[i].rstrip('.wav'), frqs[1], frqs[2] #Trace
