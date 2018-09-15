@@ -36,7 +36,7 @@ def findFormants(FILE, i, length):
     
     #Open and Write to JSON file
     formants = open('formantData.json','w')
-    formants.write("File Name: \t\t\t\t F1 (Hz): \t\t\t\t F2 (Hz): \n")
+    formants.write("File Name: \t\t\t\t F1 (Hz): \t\t\t\t F2 (Hz): \n\n")
 
     while i <= length:
         #Import & Analyze Audio Signal
@@ -74,9 +74,7 @@ def findFormants(FILE, i, length):
         elif "Control" in FILE[i]:
             plotColor.append(yellow)
 
-        #plt.plot(firstFormantValues[i], secondFormantValues[i], plotColor[i]);
-        plt.plot(firstFormantValues[i], plotColor[i]);
-        plt.plot(secondFormantValues[i], plotColor[i]);
+        plt.plot(firstFormantValues[i], secondFormantValues[i], plotColor[i]);
 
         #firstFormantValues.sort();
         #plt.subplot(2,1,1);
@@ -92,11 +90,13 @@ def findFormants(FILE, i, length):
 #Close Text File
 formants.close()
 
-#plt.axis([0, length, 0, 800])
-plt.grid()
+#Style Plot and Save to JPG
+plt.axis([300, 700, 800, 1800])
 plt.title('Formant Values')
-plt.xlabel('Sample no');
-plt.ylabel('F1 Frequency (Hz)');
+plt.xlabel('F1 Frequency (Hz)');
+plt.ylabel('F2 Frequency (Hz)');
+plt.grid()
+plt.savefig('F1_F2_Values.png')
 plt.show()
 
 
