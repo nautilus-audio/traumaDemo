@@ -15,12 +15,13 @@ import matplotlib.pyplot as style
 #Define Global Variables
 FILE = ["PTSD_female.wav", "Anxiety_female.wav", "Depression_male.wav", "Depression_male2_JB.wav", "Depression_male3_JB.wav"]
 firstFormantValues = []
+secondFormantValues = []
 length = len(FILE)-1
 i = 0
 
 
 
-def findFormants(FILE, i, length, firstFormantValues):
+def findFormants(FILE, i, length, firstFormantValues, secondFormantValues):
 
     #Define Variables
     nfft = 256
@@ -32,6 +33,11 @@ def findFormants(FILE, i, length, firstFormantValues):
     green = 'go'
     yellow = 'yo'
     plotColor = ''
+    dummy = ''
+    
+    #Open and Start JSON file
+    formants = open('formantData.json','w')
+    formants.write("File Name: \t\t\t\t F1 (Hz): \t\t\t\t F2 (Hz): \n")
 
     while i <= length:
         #Import & Analyze Audio Signal
@@ -44,38 +50,43 @@ def findFormants(FILE, i, length, firstFormantValues):
         if frqs[0] == 0.0 and frqs[1] != 0.0:
             del frqs[0]
             firstFormantValues.append(frqs[0])
-            print FILE[i], frqs[0]
+            secondFormantValues.append(frqs[1])
+            print FILE[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
+            formants.write("{} \t\t\t {} \t\t\t {} \n".format(FILE[i].rstrip('.wav'), frqs[0], frqs[1]))
         elif frqs[0] == 0.0 and frqs[1] == 0.0:
             del frqs[1]
             firstFormantValues.append(frqs[1])
-            print FILE[i], frqs[1]
+            secondFormantValues.append(frqs[2])
+            print FILE[i].rstrip('.wav'), frqs[1], frqs[2] #Trace
+            formants.write("{} \t {} \t\t\t {} \n".format(FILE[i].rstrip('.wav'), frqs[1], frqs[2]))
         else:
             firstFormantValues.append(frqs[0])
-            print FILE[i], frqs[0]
-        
+            secondFormantValues.append(frqs[1])
+            print FILE[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
+            formants.write("{} \t\t\t {} \t\t\t {} \n".format(FILE[i].rstrip('.wav'), frqs[0], frqs[1]))
+
         #Assign Plot Color to Sample Type
         if  "PTSD" in FILE[i]:
-            plotColor = green
-                #print plotColor
+            plt.subplot(2,1,1); plt.plot(firstFormantValues, green);
+            plt.subplot(2,1,2); plt.plot(secondFormantValues, green);
         elif "Depression" in FILE[i]:
-            plotColor = blue
+            plt.subplot(2,1,1); plt.plot(firstFormantValues, blue);
+            plt.subplot(2,1,2); plt.plot(secondFormantValues, blue);
         elif "Anxiety" in FILE[i]:
-            plotColor = red
+            plt.subplot(2,1,1); plt.plot(firstFormantValues, red);
+            plt.subplot(2,1,2); plt.plot(secondFormantValues, red);
         elif "Control" in FILE[i]:
-            plotColor = yellow
-        
+            plt.subplot(2,1,1); plt.plot(firstFormantValues, yellow);
+            plt.subplot(2,1,2); plt.plot(secondFormantValues, yellow);
+
         #firstFormantValues.sort();
         '''
             Next Steps:
             - Plot Data to Graph, Add Styling, Make Scatter Plot?
+            - F1 = x-axis, F2 = y-axis?
         '''
         
-        #Visualize Data
-        plt.title('Formant Values')
-        #plt.subplot(1,1,1); plt.plot(frqs); plt.xlabel('Frame no'); plt.ylabel('Freq (Hz)');
-        plt.plot(firstFormantValues, plotColor); plt.xlabel('Sample no'); plt.ylabel('Freq (Hz)');
-        print plotColor
-        plotColor = ''
+        plotColor = dummy
         
         i += 1
 
@@ -84,15 +95,24 @@ def findFormants(FILE, i, length, firstFormantValues):
     #Calculate MFCCs
     [fbank, freqs] = audioFeatureExtraction.mfccInitFilterBanks(Fs, nfft);
     ceps = audioFeatureExtraction.stMFCC(X, fbank, nceps);
-
-    return frqs, x, firstFormantValues, FILE
+    
+#formants.write("{} \n".format(FILE[i])
+        
+    #formants.write("File Name: {} \t F1: {} \t F2: {} \n".format(FILE[i]-1, firstFormantValues[i-1], secondFormantValues[i-1]))
+                   
+    return frqs, x, firstFormantValues, secondFormantValues, formants
 
 
 #Call Functions
-[frqs, x, firstFormantValues, FILE] = findFormants(FILE, i, length, firstFormantValues);
-#print firstFormantValues
+[frqs, x, firstFormantValues, secondFormantValues, formants ] = findFormants(FILE, i, length, firstFormantValues, secondFormantValues);
 
-plt.axis([0, length, 0, 1000])
+#Close Text File
+formants.close()
+
+#plt.axis([0, length, 0, 800])
+plt.title('Formant Values')
+plt.xlabel('Sample no');
+plt.ylabel('F1 Frequency (Hz)');
 plt.show()
 
 
