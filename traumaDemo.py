@@ -15,7 +15,7 @@ from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis import audioFeatureExtraction
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as style
-style.use('ggplot')
+#style.use('ggplot')
 
 #Define Global Variables
 FILE = ["PTSD_female.wav", "Anxiety_female.wav", "Depression_male.wav", "Depression_male2_JB.wav", "Depression_male3_JB.wav", "Control_male.wav", "Control_Male2.wav", "Depression_female.wav", "Depression_female2.wav", "Depression_female3.wav", "PTSD_male.wav", "Anxiety_male.wav", "Anxiety_male2.wav"]
@@ -41,6 +41,7 @@ def findFormants(FILE, i):
     for i in range(len(FILE)):
         #Import & Analyze Audio Signal
         [Fs, x] = audioBasicIO.readAudioFile(FILE[i]);
+        print(FILE[i], "is of type", type(FILE[i]))
 
         #Calculate Formant Frequencies
         frqs = audioFeatureExtraction.phormants(x[:,0], Fs);
