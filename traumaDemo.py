@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 '''
 Anxiety = Red
@@ -8,20 +7,35 @@ Control = Yellow
 
 Next Steps:
 - Plot Data to Graph, Add Styling
-- F1 = x-axis, F2 = y-axis?
+- try, catch
+- point to audioFiles directory
+- make program run faster
+
+audioFiles = ["PTSD_female.wav", "Anxiety_female.wav", "Depression_male.wav", "Depression_male2_JB.wav", "Depression_male3_JB.wav", "Control_male.wav", "Control_Male2.wav", "Depression_female.wav", "Depression_female2.wav", "Depression_female3.wav", "PTSD_male.wav", "Anxiety_male.wav", "Anxiety_male2.wav"]
+
 '''
 
 from pyAudioAnalysis import audioBasicIO
 from pyAudioAnalysis import audioFeatureExtraction
 import matplotlib.pyplot as plt
+import os, sys
 import matplotlib.pyplot as style
-#style.use('ggplot')
+style.use('ggplot')
 
 #Define Global Variables
-FILE = ["PTSD_female.wav", "Anxiety_female.wav", "Depression_male.wav", "Depression_male2_JB.wav", "Depression_male3_JB.wav", "Control_male.wav", "Control_Male2.wav", "Depression_female.wav", "Depression_female2.wav", "Depression_female3.wav", "PTSD_male.wav", "Anxiety_male.wav", "Anxiety_male2.wav"]
+path = "/Users/kamilahmitchell/Desktop/C++, Python & Vsts/Neurolex/traumaDemo/Audio Files"
+dir = os.listdir(path)
 i = 0
 
-def findFormants(FILE, i):
+def readFiles(dir):
+    audioFiles = []
+    for file in dir:
+        if file.endswith(".wav"):
+            audioFiles.append(file)
+    print audioFiles #Trace
+    return audioFiles
+
+def findFormants(audioFiles, i, dir):
 
     #Define Variables
     red = 'ro'
@@ -34,60 +48,61 @@ def findFormants(FILE, i):
     firstFormantValues = []
     secondFormantValues = []
     
-    #Open and Write to JSON file
+    #Open and Write to JSON audioFiles
     formants = open('formantData.json','w')
-    formants.write("File Name: \t\t\t\t F1 (Hz): \t\t\t\t F2 (Hz): \n\n")
+    formants.write("audioFiles Name: \t\t\t\t F1 (Hz): \t\t\t\t F2 (Hz): \n\n")
 
-    for i in range(len(FILE)):
+    for i in range(len(audioFiles)):
         #Import & Analyze Audio Signal
-        [Fs, x] = audioBasicIO.readAudioFile(FILE[i]);
-        print(FILE[i], "is of type", type(FILE[i]))
-
-        #Calculate Formant Frequencies
+        [Fs, x] = audioBasicIO.readAudioFile(audioFiles[i]);
         frqs = audioFeatureExtraction.phormants(x[:,0], Fs);
 
-        #Delete Empty Values, add Data to new array
+        #Calculate Formant Frequencies
+        #print frqs
+            #Delete Empty Values, add Data to F1 F2 arrays
         if frqs[0] == 0.0 and frqs[1] != 0.0:
             frqs.remove(0.0)
             firstFormantValues.append(frqs[0])
             secondFormantValues.append(frqs[1])
-            print FILE[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
-            formants.write("{} \t\t\t {} \t\t\t {} \n".format(FILE[i].rstrip('.wav'), frqs[0], frqs[1]))
+            print audioFiles[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
+            formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
         elif frqs[0] == 0.0 and frqs[1] == 0.0:
             frqs.remove(0.0)
             firstFormantValues.append(frqs[1])
             secondFormantValues.append(frqs[2])
-            print FILE[i].rstrip('.wav'), frqs[1], frqs[2] #Trace
-            formants.write("{} \t {} \t\t\t {} \n".format(FILE[i].rstrip('.wav'), frqs[1], frqs[2]))
+            print audioFiles[i].rstrip('.wav'), frqs[1], frqs[2] #Trace
+            formants.write("{} \t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[1], frqs[2]))
         else:
             firstFormantValues.append(frqs[0])
             secondFormantValues.append(frqs[1])
-            print FILE[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
-            formants.write("{} \t\t\t {} \t\t\t {} \n".format(FILE[i].rstrip('.wav'), frqs[0], frqs[1]))
+            print audioFiles[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
+            formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
 
         #Assign Plot Color to Sample Type
-        if  "PTSD" in FILE[i]:
+        if  "PTSD" in audioFiles[i]:
             plotColor.append(green)
-        elif "Depression" in FILE[i]:
+        elif "Depression" in audioFiles[i]:
             plotColor.append(blue)
-        elif "Anxiety" in FILE[i]:
+        elif "Anxiety" in audioFiles[i]:
             plotColor.append(red)
-        elif "Control" in FILE[i]:
+        elif "Control" in audioFiles[i]:
             plotColor.append(yellow)
+        else:
+            print "Error, invalid voice sample entered"
 
         plt.plot(firstFormantValues[i], secondFormantValues[i], plotColor[i]);
+            #data=[audioFiles][firstFormantValues][secondFormantValues]
 
         #firstFormantValues.sort();
         #plt.subplot(2,1,1);
 
-                   
-    return firstFormantValues, secondFormantValues, formants
-
+    return formants
 
 #Call Functions
-[firstFormantValues, secondFormantValues, formants] = findFormants(FILE, i);
+audioFiles = readFiles(dir);
+formants = findFormants(audioFiles, i, dir);
 
-#Close Text File
+#Close Text audioFiles
 formants.close()
 
 #Style Plot and Save to JPG
