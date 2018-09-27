@@ -29,10 +29,11 @@ i = 0
 
 class PerformOperation(object):
     
-    def __init__(self, dir):
+    def __init__(self, dir, audioFiles):
         self.dir = dir
+        self.audioFiles = audioFiles
 
-    def readFiles(dir):
+    def readFiles(self):
         audioFiles = []
         for file in dir:
             if file.endswith(".wav"):
