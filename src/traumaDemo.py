@@ -25,13 +25,15 @@ import matplotlib.pyplot as style
 #Define Global Variables
 path = "/Users/kamilahmitchell/Desktop/C++, Python & Vsts/Neurolex/traumaDemo/Audio Files"
 dir = os.listdir(path)
-i = 0
 
 class PerformOperation(object):
     
-    def __init__(self, dir, audioFiles):
+    i = 0
+    
+    def __init__(self, dir, audioFiles, i):
         self.dir = dir
         self.audioFiles = audioFiles
+        self.i = i
 
     def readFiles(self):
         audioFiles = []
@@ -42,6 +44,7 @@ class PerformOperation(object):
         return audioFiles
 
     def findFormants(audioFiles, i):
+
 
         #Define Variables
         red = 'ro'
@@ -59,34 +62,47 @@ class PerformOperation(object):
             formants = open('formantData.json','w')
             formants.write("audioFiles Name: \t\t\t\t F1 (Hz): \t\t\t\t F2 (Hz): \n\n")
         except:
-            print("Something went wrong when writing to the file")
+            print("Something went wrong when opening the file.")
 
         for i in range(len(audioFiles)):
             #Import & Analyze Audio Signal
             [Fs, x] = audioBasicIO.readAudioFile(audioFiles[i]);
+            
+            #Calculate Formant Frequencies
             frqs = audioFeatureExtraction.phormants(x[:,0], Fs);
 
-            #Calculate Formant Frequencies
-            #print frqs
-                #Delete Empty Values, add Data to F1 F2 arrays
+            #Delete Empty Values, add Data to F1 F2 arrays
             if frqs[0] == 0.0 and frqs[1] != 0.0:
                 frqs.remove(0.0)
                 firstFormantValues.append(frqs[0])
                 secondFormantValues.append(frqs[1])
                 print audioFiles[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
-                formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
+                
+                try:
+                    formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
+                except:
+                    print("Something went wrong when writing to the file.")
+            
             elif frqs[0] == 0.0 and frqs[1] == 0.0:
                 frqs.remove(0.0)
                 firstFormantValues.append(frqs[1])
                 secondFormantValues.append(frqs[2])
                 print audioFiles[i].rstrip('.wav'), frqs[1], frqs[2] #Trace
-                formants.write("{} \t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[1], frqs[2]))
+                
+                try:
+                    formants.write("{} \t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[1], frqs[2]))
+                except:
+                        print("Something went wrong when writing to the file.")
             else:
                 firstFormantValues.append(frqs[0])
                 secondFormantValues.append(frqs[1])
                 print audioFiles[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
-                formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
-
+                
+                try:
+                    formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
+                except:
+                    print("Something went wrong when writing to the file.")
+        
             #Assign Plot Color to Sample Type
             if  "PTSD" in audioFiles[i]:
                 plotColor.append(green)
@@ -99,7 +115,10 @@ class PerformOperation(object):
             else:
                 print "Error, invalid voice sample entered"
 
-            plt.plot(firstFormantValues[i], secondFormantValues[i], plotColor[i]);
+            try:
+                plt.plot(firstFormantValues[i], secondFormantValues[i], plotColor[i]);
+            except:
+                print("Something went wrong when plotting the data.")
                 #data=[audioFiles][firstFormantValues][secondFormantValues]
 
             #firstFormantValues.sort();
