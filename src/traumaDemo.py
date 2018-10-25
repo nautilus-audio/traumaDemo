@@ -1,18 +1,8 @@
 #!/usr/bin/python
 '''
-Anxiety = Red
-Depression = Blue
-PTSD = Green
-Control = Yellow
 
 Next Steps:
-- Plot Data to Graph, Add Styling
-- try, catch
-- point to audioFiles directory
-- make program run faster
-
-audioFiles = ["PTSD_female.wav", "Anxiety_female.wav", "Depression_male.wav", "Depression_male2_JB.wav", "Depression_male3_JB.wav", "Control_male.wav", "Control_Male2.wav", "Depression_female.wav", "Depression_female2.wav", "Depression_female3.wav", "PTSD_male.wav", "Anxiety_male.wav", "Anxiety_male2.wav"]
-
+- optimize
 '''
 
 from pyAudioAnalysis import audioBasicIO
@@ -47,10 +37,10 @@ class PerformOperation(object):
 
 
         #Define Variables
-        red = 'ro'
-        blue = 'bo'
-        green = 'go'
-        yellow = 'yo'
+        red = 'ro' #Anxiety = Red
+        blue = 'bo' #Depression = Blue
+        green = 'go' #PTSD = Green
+        yellow = 'yo' #Control = Yellow
         
         #Arrays to store colors, F1 & F2 Values
         plotColor = []
@@ -72,36 +62,17 @@ class PerformOperation(object):
             frqs = audioFeatureExtraction.phormants(x[:,0], Fs);
 
             #Delete Empty Values, add Data to F1 F2 arrays
-            if frqs[0] == 0.0 and frqs[1] != 0.0:
-                frqs.remove(0.0)
-                firstFormantValues.append(frqs[0])
-                secondFormantValues.append(frqs[1])
-                print audioFiles[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
-                
-                try:
-                    formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
-                except:
-                    print("Something went wrong when writing to the file.")
-            
-            elif frqs[0] == 0.0 and frqs[1] == 0.0:
-                frqs.remove(0.0)
-                firstFormantValues.append(frqs[1])
-                secondFormantValues.append(frqs[2])
-                print audioFiles[i].rstrip('.wav'), frqs[1], frqs[2] #Trace
-                
-                try:
-                    formants.write("{} \t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[1], frqs[2]))
-                except:
-                        print("Something went wrong when writing to the file.")
-            else:
-                firstFormantValues.append(frqs[0])
-                secondFormantValues.append(frqs[1])
-                print audioFiles[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
-                
-                try:
-                    formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
-                except:
-                    print("Something went wrong when writing to the file.")
+            #for i in range(len(frqs)-1):
+            if 0.0 in frqs: frqs.remove(0.0)
+            if 0.0 in frqs: frqs.remove(0.0)
+            firstFormantValues.append(frqs[0])
+            secondFormantValues.append(frqs[1])
+            print audioFiles[i].rstrip('.wav'), frqs[0], frqs[1] #Trace
+                    
+            try:
+                formants.write("{} \t\t\t {} \t\t\t {} \n".format(audioFiles[i].rstrip('.wav'), frqs[0], frqs[1]))
+            except:
+                print("Something went wrong when writing to the file.")
         
             #Assign Plot Color to Sample Type
             if  "PTSD" in audioFiles[i]:
