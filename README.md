@@ -16,6 +16,9 @@ Depression samples will have lower frequencies, PTSD samples will have the highe
 ![alt text](https://github.com/imABEING/traumaDemo/blob/master/F1_F2_Values.png "Plot")
 
 Yellow = Control
-Blue = Depressio
+
+Blue = Depression
+
 Red = Anxiety
+
 Green = PTSD
