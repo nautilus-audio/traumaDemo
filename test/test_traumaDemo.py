@@ -10,5 +10,5 @@ class TestDemo(unittest.TestCase):
     
     def test_findFormants(self):
 
-        if __name__ == '__main__':
-            unittest.main()
+if __name__ == '__main__':
+    unittest.main()
